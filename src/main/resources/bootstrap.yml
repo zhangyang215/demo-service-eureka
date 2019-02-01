@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: service-registry
+  profiles.active: dev
+
+server:
+  port: 9001
+
+---
+spring:
+  profiles: dev
+eureka:
+  environment: dev
+  instance:
+    hostname: localhost
+    port: ${server.port}
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 60000
+
+---
+
+spring:
+  profiles: docker
+server:
+  port: ${SERVICE_PORT:9001}
+eureka:
+  environment: docker
+  instance:
+    hostname: ${SERVICE_HOST:localhost}
+    port: ${server.port}
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 4000
+    
+---
+
+spring:
+  profiles: primary
+server:
+  port: 19001
+eureka:
+  environment: dev
+  datacenter: AWS
+  instance:
+    hostname: eureka-primary
+    port: ${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-secondary:19002/eureka/,http://eureka-tertiary:19003/eureka/
+
+---
+spring:
+  profiles: secondary
+server:
+  port: 19002
+eureka:
+  instance:
+    hostname: eureka-secondary
+    port: ${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-primary:19001/eureka/,http://eureka-tertiary:19003/eureka/
+
+
+---
+
+spring:
+  profiles: tertiary
+server:
+  port: 19003
+eureka:
+  instance:
+    hostname: eureka-tertiary
+    port: ${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-secondary:19002/eureka/,http://eureka-primary:19001/eureka/
