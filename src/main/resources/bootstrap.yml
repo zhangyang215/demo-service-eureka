@@ -22,7 +22,7 @@ eureka:
   server:
     waitTimeInMsWhenSyncEmpty: 0
     enable-self-preservation: false
-    eviction-interval-timer-in-ms: 60000
+    #eviction-interval-timer-in-ms: 60000
 
 ---
 
