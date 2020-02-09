@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: demo-service-eureka-primary
+  name: demo-service-eureka-primary 
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-service-eureka-primary
+  template:
+    metadata:
+      name: demo-service-eureka-primary
+      labels:
+        app: demo-service-eureka-primary
+    spec:
+      nodeName: node1
+      hostNetwork: true
+      containers:
+      - name: demo-service-eureka-primary
+        image: 192.168.0.209:5000/demo-service-eureka
+        imagePullPolicy: Always
+        args: ["--spring.profiles.active=cluster"]
+        env:
+          - name: SERVER_HOST
+            value: "192.168.0.209"
+          - name: REGISTRY_URL
+            value: "http://192.168.0.38:9001/eureka,http://192.168.0.22:9001/eureka"
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: demo-service-eureka-primary
+  name: demo-service-eureka-primary
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 9001 
+    targetPort: 9001
+    nodePort: 32001
+  selector:
+    app: demo-service-eureka-primary
