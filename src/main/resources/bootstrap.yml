@@ -46,6 +46,20 @@ eureka:
 ---
 
 spring:
+  profiles: cluster
+server:
+  port: ${SERVICE_PORT:9001}
+eureka:
+  instance:
+    hostname: ${SERVICE_HOST:localhost}
+    port: ${server.port}
+  client:
+    serviceUrl:
+      defaultZone: ${REGISTRY_URL:http://${eureka.instance.hostname}:${server.port}/eureka/}
+
+---
+
+spring:
   profiles: primary
 server:
   port: 32001
