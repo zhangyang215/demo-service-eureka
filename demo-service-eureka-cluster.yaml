@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: demo-service-eureka-cluster
-        image: 192.168.0.209:5000/demo-service-eureka
+        image: 172.31.87.111:5000/demo-service-eureka
         imagePullPolicy: Always
         args: [--spring.profiles.active=cluster]
         env:
