@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: demo-service-eureka
-        image: 192.168.0.209:5000/demo-service-eureka
+        image: ${MASTER_NODE}:5000/demo-service-eureka
         imagePullPolicy: Always
 
 ---
