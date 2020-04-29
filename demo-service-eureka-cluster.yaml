@@ -31,7 +31,7 @@ spec:
         - name: SERVICE_HOST
           value: ${POD_NAME}.eureka
         - name: REGISTRY_URL
-          value: "http://eureka-0.eureka/eureka,http://eureka-1.eureka:9001/eureka,http://eureka-2.eureka:9001/eureka"
+          value: "http://eureka-0.eureka:9001/eureka,http://eureka-1.eureka:9001/eureka,http://eureka-2.eureka:9001/eureka"
 
 ---
 kind: Service
