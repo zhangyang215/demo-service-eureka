@@ -17,13 +17,8 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-  server:
-    waitTimeInMsWhenSyncEmpty: 0
-    enable-self-preservation: true
-    #eviction-interval-timer-in-ms: 60000
 
 ---
-
 spring:
   profiles: docker
 server:
@@ -39,9 +34,8 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
-    waitTimeInMsWhenSyncEmpty: 0
     enable-self-preservation: true
-    eviction-interval-timer-in-ms: 4000
+    eviction-interval-timer-in-ms: 5000 #default 60000
     
 ---
 
@@ -50,12 +44,16 @@ spring:
 server:
   port: ${SERVICE_PORT:9001}
 eureka:
+  environment: cluster
   instance:
     hostname: ${SERVICE_HOST:localhost}
     port: ${server.port}
   client:
     serviceUrl:
       defaultZone: ${REGISTRY_URL:http://${eureka.instance.hostname}:${server.port}/eureka/}
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 5000 #default 60000
 
 ---
 
@@ -69,7 +67,7 @@ eureka:
     port: ${server.port}
   client:
     serviceUrl:
-      defaultZone: http://eureka-secondary:32001/eureka/,http://eureka-secondary:32002/eureka/,http://eureka-tertiary:32003/eureka/
+      defaultZone: http://eureka-secondary:32002/eureka/,http://eureka-tertiary:32003/eureka/
 
 ---
 spring:
@@ -82,7 +80,7 @@ eureka:
     port: ${server.port}
   client:
     serviceUrl:
-      defaultZone: http://eureka-primary:32001/eureka/,http://eureka-secondary:32002/eureka/,http://eureka-tertiary:32003/eureka/
+      defaultZone: http://eureka-primary:32001/eureka/,http://eureka-tertiary:32003/eureka/
 
 
 ---
@@ -97,4 +95,4 @@ eureka:
     port: ${server.port}
   client:
     serviceUrl:
-      defaultZone: http://eureka-secondary:32001/eureka/,http://eureka-secondary:32002/eureka/,http://eureka-primary:32003/eureka/
+      defaultZone: http://eureka-secondary:32002/eureka/,http://eureka-primary:32001/eureka/
